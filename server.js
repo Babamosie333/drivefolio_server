@@ -251,7 +251,23 @@ wss.on('connection', async (ws) =>
         console.error('WebSocket error:', error)
     })
 })
-
+// Keep server awake on Render free plan
+const SERVER_URL = process.env.RENDER_EXTERNAL_URL
+if(SERVER_URL)
+{
+    setInterval(async () =>
+    {
+        try
+        {
+            await fetch(SERVER_URL)
+            console.log('Keep alive ping sent')
+        }
+        catch(error)
+        {
+            console.error('Keep alive failed:', error)
+        }
+    }, 10 * 60 * 1000) // Every 10 minutes
+}
 // ═══════════════════════════════════
 // START SERVER
 // ═══════════════════════════════════
